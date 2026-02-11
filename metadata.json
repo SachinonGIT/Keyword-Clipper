@@ -1,0 +1,5 @@
+{
+  "name": "Keyword Clipper",
+  "description": "A mobile-optimized tool for managing and copying keyword lists. Paste comma-separated strings to generate tap-to-copy chips with instant visual feedback.",
+  "requestFramePermissions": []
+}
