@@ -5,15 +5,318 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Keyword Clipper</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+      :root {
+        --bg-color: #f8fafc;
+        --text-main: #1e293b;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #e0e7ff;
+        --success: #22c55e;
+        --success-light: #dcfce7;
+        --border-color: #e2e8f0;
+        --card-bg: #ffffff;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --radius-lg: 1rem;
+        --radius-xl: 1.5rem;
+        --radius-full: 9999px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
       body {
         font-family: 'Inter', sans-serif;
-        background-color: #f8fafc;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        line-height: 1.5;
         -webkit-tap-highlight-color: transparent;
+      }
+
+      .app-container {
+        min-height: 100vh;
+        padding-bottom: 3rem;
+        display: flex;
+        flex-direction: column;
+        max-width: 42rem;
+        margin: 0 auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .app-header {
+        position: sticky;
+        top: 0;
+        background-color: rgba(248, 250, 252, 0.8);
+        backdrop-filter: blur(8px);
+        z-index: 20;
+        padding: 1.5rem 0;
+        margin-bottom: 1rem;
+      }
+
+      .header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+
+      .app-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+      }
+
+      .app-title span {
+        color: var(--primary);
+      }
+
+      .counter-badge {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-full);
+        font-size: 0.75rem;
+        font-weight: 700;
+        border: 1px solid #c7d2fe;
+      }
+
+      .app-subtitle {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      .input-section {
+        background-color: var(--card-bg);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid #f1f5f9;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+        margin-left: 0.25rem;
+      }
+
+      .textarea {
+        width: 100%;
+        height: 6rem;
+        padding: 1rem;
+        border-radius: var(--radius-lg);
+        background-color: #f8fafc;
+        border: 1px solid var(--border-color);
+        resize: none;
+        color: var(--text-main);
+        font-size: 1rem;
+        transition: all 0.2s;
+        outline: none;
+      }
+
+      .textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px var(--primary-light);
+      }
+
+      .button-group {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+      }
+
+      .btn {
+        cursor: pointer;
+        font-weight: 600;
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius-lg);
+        transition: all 0.2s;
+        border: none;
+        outline: none;
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn-primary {
+        flex: 1;
+        background-color: var(--primary);
+        color: white;
+        box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .btn-secondary {
+        background-color: #f1f5f9;
+        color: var(--text-secondary);
+      }
+
+      .btn-secondary:hover {
+        background-color: #e2e8f0;
+      }
+
+      .search-container {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+
+      .search-icon {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+        width: 1rem;
+        height: 1rem;
+        color: var(--text-muted);
+        pointer-events: none;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.75rem;
+        border-radius: var(--radius-lg);
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        font-size: 0.875rem;
+        outline: none;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s;
+      }
+
+      .search-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px var(--primary-light);
+      }
+
+      .keywords-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        animation: fadeInSlide 0.5s ease-out;
+      }
+
+      @keyframes fadeInSlide {
+        from { opacity: 0; transform: translateY(1rem); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .keyword-chip {
+        position: relative;
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius-lg);
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 5rem;
+        border: 1px solid var(--border-color);
+        background-color: var(--card-bg);
+        color: var(--text-main);
+        cursor: pointer;
+        box-shadow: var(--shadow-sm);
+        user-select: none;
+      }
+
+      .keyword-chip:active {
+        transform: scale(0.95);
+      }
+
+      .keyword-chip--copied {
+        background-color: var(--success-light);
+        border-color: #86efac;
+        color: #15803d;
+      }
+
+      .copied-toast {
+        position: absolute;
+        top: -0.5rem;
+        right: -0.25rem;
+        background-color: var(--success);
+        color: white;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: var(--radius-full);
+        box-shadow: var(--shadow-md);
+        animation: bounce 1s infinite;
+      }
+
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
+      }
+
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 5rem 0;
+        text-align: center;
+        opacity: 0.5;
+      }
+
+      .empty-icon-circle {
+        width: 4rem;
+        height: 4rem;
+        background-color: #e2e8f0;
+        border-radius: var(--radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      .empty-icon {
+        width: 2rem;
+        height: 2rem;
+        color: var(--text-muted);
+      }
+
+      .scroll-top-btn {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        padding: 1rem;
+        background-color: var(--card-bg);
+        color: var(--primary);
+        border-radius: var(--radius-full);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        border: 1px solid #f1f5f9;
+        cursor: pointer;
+        transition: transform 0.2s;
+        z-index: 30;
+      }
+
+      .scroll-top-btn:active {
+        transform: scale(0.9);
+      }
+
+      .truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
       }
     </style>
   <script type="importmap">
